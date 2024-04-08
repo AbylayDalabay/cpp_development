@@ -1,0 +1,1 @@
+{"name":"Local: e","url":"c:\\Users\\User\\Desktop\\contest\\yandex_contest_2024\\e.cpp","tests":[{"id":1712575256591,"input":"3 6\nyandex 10\nyacht 1\nyoghurt 15\n+ y\n+ a\n+ n\n-\n-\n+ o","output":"3\n1\n1\n1\n3\n3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\User\\Desktop\\contest\\yandex_contest_2024\\e.cpp","group":"local","local":true}
