@@ -89,19 +89,10 @@ void solve(){
         else pref[i].dir = s[i];
     }
 
-    // cout << "pref_state: " << en;
-    // for(int i = 1;i <= n;i++) cout << pref[i].cord << " ";
-    // cout << en;
-    // for(int i = 1;i <= n;i++) cout << pref[i].dir << " ";
-    // cout << en;
-
     for(int i = n;i >= 1;i--){
         suf_last[i] = suf_last[i + 1];
         if(s[i] != 'F') suf_last[i] = i;
     }
-
-    // for(int i = 1;i <= n;i++) cout << suf_last[i] << " ";
-    // cout << en;
 
     struct changes{
         ll add_F;
@@ -124,12 +115,6 @@ void solve(){
             suf[i].add = suf[i + 1].add;
         }
     }
-    
-    // cout << "suf: " << en;
-    // for(int i = 1;i <= n;i++){
-    //     cout << suf[i].add_F << " " << suf[i].add << en;
-    // }
-    // cout << en;
     
     set<ll> ans;
 
@@ -164,8 +149,7 @@ void solve(){
             }
         }
     }
-
-    // cout << "ANS: " << en;
+    
     cout << ans.size() << en;
 }            
 
