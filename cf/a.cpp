@@ -21,8 +21,8 @@ std::mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count())
 #define br break
 #define cn continue
 #define en '\n'
-#define yes cout << "YES\n";
-#define no cout << "NO\n"
+#define yes cout << "Yes\n";
+#define no cout << "No\n"
 #define yesno(x); cout << (x ? "YES\n" : "NO\n");
 #define dbg(x) cout << (#x) << ": " << (x) << '\n';
 #define all(x) x.begin(), x.end()
@@ -61,96 +61,52 @@ THE CODE IS ALWAYS SHORT
 
 */
 
-const int N = 3e5 + 500;
+const ll MOD = 998244353;
 
-int n, suf_last[N];
-string s;
-
-struct state{
-    ll cord;
-    char dir;
-
-    void step(){
-        if(dir == 'R') cord++;
-        if(dir == 'L') cord--;
+long long binpow(long long a, long long b, long long m) {
+    a %= m;
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a % m;
+        a = a * a % m;
+        b >>= 1;
     }
-};
+    return res;
+}
 
-state pref[N];
+ll binpow(ll a, ll b){
+    rt binpow(a, b, MOD);
+}
+
+ll cnt[16], sum = 0;
+
+bool gr[16][16];
+
+bool is_prod(int A, int B){
+    A |= (1 << 3);
+    A ^= (1 << 3);
+    B >>= 1;
+    rt (A == B);
+}
 
 void solve(){
-    cin >> n >> s;
-    s = "#" + s;
-
-    pref[0] = {0, 'R'};
-    for(int i = 1;i <= n;i++){
-        pref[i] = pref[i - 1];
-        if(s[i] == 'F') pref[i].step();
-        else pref[i].dir = s[i];
+    for(int mask = 0;mask < 16;mask++){
+        cin >> cnt[mask];
+        sum += cnt[mask];
     }
 
-    for(int i = n;i >= 1;i--){
-        suf_last[i] = suf_last[i + 1];
-        if(s[i] != 'F') suf_last[i] = i;
-    }
+    // len is sum + 3
 
-    struct changes{
-        ll add_F;
-        ll add;
-    };
-
-    vector<changes> suf(n + 5);
-    suf[n + 1] = {0, 0};
-    for(int i = n;i >= 1;i--){
-        if(s[i] == 'L'){
-            suf[i].add = suf[i + 1].add - suf[i + 1].add_F;
-            suf[i].add_F = 0;
+    for(int i = 0;i < 16;i++){
+        for(int j = 0;j < 16;j++){
+            gr[i][j] = is_prod(i, j);
+            cout << gr[i][j];
         }
-        else if(s[i] == 'R'){
-            suf[i].add = suf[i + 1].add + suf[i + 1].add_F;
-            suf[i].add_F = 0;
-        }
-        else{
-            suf[i].add_F = suf[i + 1].add_F + 1;
-            suf[i].add = suf[i + 1].add;
-        }
-    }
-    
-    set<ll> ans;
+        cout <<    }
 
-    auto relax = [&](state A, changes B){
-        ll ret = A.cord;
-        if(A.dir == 'L') ret -= B.add_F;
-        if(A.dir == 'R') ret += B.add_F;
 
-        ret += B.add;
-
-        ans.insert(ret);
-    };
-
-    for(int i = 1;i <= n;i++){
-        for(char cur_dir : {'L', 'R', 'F'}){
-            if(cur_dir != s[i]){
-                if(cur_dir == 'L'){
-                    state A = pref[i - 1];
-                    A.dir = 'L';
-                    relax(A, suf[i + 1]);
-                }
-                else if(cur_dir == 'R'){
-                    state A = pref[i - 1];
-                    A.dir = 'R';
-                    relax(A, suf[i + 1]);
-                }
-                else{
-                    state A = pref[i - 1];
-                    A.step();
-                    relax(A, suf[i + 1]);
-                }
-            }
-        }
-    }
-    cout << ans.size() << en;
-}            
+} 
 
 int main(){
     fast_io;
@@ -158,7 +114,7 @@ int main(){
     int test_cases = 1;
     // cin >> test_cases;
     for(int _ = 1;_ <= test_cases;_++){
-        //cout << "Case #: " << _ << en;
+        // cout << "Case #: " << _ << en;
         solve();
     }
 }   

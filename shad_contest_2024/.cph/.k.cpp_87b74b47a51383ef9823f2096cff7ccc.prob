@@ -1,0 +1,1 @@
+{"name":"Local: k","url":"c:\\Users\\User\\Desktop\\contest\\shad_contest_2024\\k.cpp","tests":[{"id":1715515334878,"input":"3\n1 -1 0\n1 -1 1\n-2 1 3\n4\n-1 1 3\n1 1 2\n8 -4 7\n-4 8 5","output":"YES\nNO\nYES\nNO"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\User\\Desktop\\contest\\shad_contest_2024\\k.cpp","group":"local","local":true}

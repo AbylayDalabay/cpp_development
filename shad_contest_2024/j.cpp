@@ -61,96 +61,15 @@ THE CODE IS ALWAYS SHORT
 
 */
 
-const int N = 3e5 + 500;
-
-int n, suf_last[N];
-string s;
-
-struct state{
-    ll cord;
-    char dir;
-
-    void step(){
-        if(dir == 'R') cord++;
-        if(dir == 'L') cord--;
-    }
-};
-
-state pref[N];
-
 void solve(){
-    cin >> n >> s;
-    s = "#" + s;
-
-    pref[0] = {0, 'R'};
-    for(int i = 1;i <= n;i++){
-        pref[i] = pref[i - 1];
-        if(s[i] == 'F') pref[i].step();
-        else pref[i].dir = s[i];
+    for(int st = 0;st < 11;st++){
+        vi pos;
+        for(int i = st;i < 150;i += 11) pos.pb(i);
+        dbg(sz(pos));
     }
 
-    for(int i = n;i >= 1;i--){
-        suf_last[i] = suf_last[i + 1];
-        if(s[i] != 'F') suf_last[i] = i;
-    }
-
-    struct changes{
-        ll add_F;
-        ll add;
-    };
-
-    vector<changes> suf(n + 5);
-    suf[n + 1] = {0, 0};
-    for(int i = n;i >= 1;i--){
-        if(s[i] == 'L'){
-            suf[i].add = suf[i + 1].add - suf[i + 1].add_F;
-            suf[i].add_F = 0;
-        }
-        else if(s[i] == 'R'){
-            suf[i].add = suf[i + 1].add + suf[i + 1].add_F;
-            suf[i].add_F = 0;
-        }
-        else{
-            suf[i].add_F = suf[i + 1].add_F + 1;
-            suf[i].add = suf[i + 1].add;
-        }
-    }
-    
-    set<ll> ans;
-
-    auto relax = [&](state A, changes B){
-        ll ret = A.cord;
-        if(A.dir == 'L') ret -= B.add_F;
-        if(A.dir == 'R') ret += B.add_F;
-
-        ret += B.add;
-
-        ans.insert(ret);
-    };
-
-    for(int i = 1;i <= n;i++){
-        for(char cur_dir : {'L', 'R', 'F'}){
-            if(cur_dir != s[i]){
-                if(cur_dir == 'L'){
-                    state A = pref[i - 1];
-                    A.dir = 'L';
-                    relax(A, suf[i + 1]);
-                }
-                else if(cur_dir == 'R'){
-                    state A = pref[i - 1];
-                    A.dir = 'R';
-                    relax(A, suf[i + 1]);
-                }
-                else{
-                    state A = pref[i - 1];
-                    A.step();
-                    relax(A, suf[i + 1]);
-                }
-            }
-        }
-    }
-    cout << ans.size() << en;
-}            
+    cout << 150 - (14 + 25) << en;
+}       
 
 int main(){
     fast_io;

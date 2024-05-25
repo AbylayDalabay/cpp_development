@@ -61,96 +61,57 @@ THE CODE IS ALWAYS SHORT
 
 */
 
-const int N = 3e5 + 500;
-
-int n, suf_last[N];
-string s;
-
-struct state{
-    ll cord;
-    char dir;
-
-    void step(){
-        if(dir == 'R') cord++;
-        if(dir == 'L') cord--;
-    }
-};
-
-state pref[N];
+int n, m;
 
 void solve(){
-    cin >> n >> s;
-    s = "#" + s;
-
-    pref[0] = {0, 'R'};
+    cin >> n >> m;
+    vt<vt<int>> ar(n + 5, vi(m + 5, 0));
     for(int i = 1;i <= n;i++){
-        pref[i] = pref[i - 1];
-        if(s[i] == 'F') pref[i].step();
-        else pref[i].dir = s[i];
+        for(int j = 1;j <= m;j++){
+            char c;
+            cin >> c;
+            ar[i][j] = c - '0';
+        }
+    }
+
+    vt<vt<int>> up_lef = vt<vt<int>>(n + 5, vi(m + 5, 0));
+    vt<vt<int>> up_rig = vt<vt<int>>(n + 5, vi(m + 5, 0));
+    vt<vt<int>> down_lef = vt<vt<int>>(n + 5, vi(m + 5, 0));
+    vt<vt<int>> down_rig = vt<vt<int>>(n + 5, vi(m + 5, 0));
+
+    for(int i = 1;i <= n;i++){
+        for(int j = 1;j <= m;j++){
+            if(ar[i][j] == 1) up_lef[i][j] = 1 + up_lef[i - 1][j - 1];
+        }
+    }
+
+    for(int i = 1;i <= n;i++){
+        for(int j = m;j >= 1;j--){
+            if(ar[i][j] == 1) up_rig[i][j] = 1 + up_rig[i - 1][j + 1];
+        }
     }
 
     for(int i = n;i >= 1;i--){
-        suf_last[i] = suf_last[i + 1];
-        if(s[i] != 'F') suf_last[i] = i;
+        for(int j = 1;j <= m;j++){
+            if(ar[i][j] == 1) down_lef[i][j] = 1 + down_lef[i + 1][j - 1];
+        }
     }
 
-    struct changes{
-        ll add_F;
-        ll add;
-    };
-
-    vector<changes> suf(n + 5);
-    suf[n + 1] = {0, 0};
     for(int i = n;i >= 1;i--){
-        if(s[i] == 'L'){
-            suf[i].add = suf[i + 1].add - suf[i + 1].add_F;
-            suf[i].add_F = 0;
-        }
-        else if(s[i] == 'R'){
-            suf[i].add = suf[i + 1].add + suf[i + 1].add_F;
-            suf[i].add_F = 0;
-        }
-        else{
-            suf[i].add_F = suf[i + 1].add_F + 1;
-            suf[i].add = suf[i + 1].add;
+        for(int j = m;j >= 1;j--){
+            if(ar[i][j] == 1) down_rig[i][j] = 1 + down_rig[i + 1][j + 1];
         }
     }
-    
-    set<ll> ans;
 
-    auto relax = [&](state A, changes B){
-        ll ret = A.cord;
-        if(A.dir == 'L') ret -= B.add_F;
-        if(A.dir == 'R') ret += B.add_F;
-
-        ret += B.add;
-
-        ans.insert(ret);
-    };
-
+    int ans = 0;
     for(int i = 1;i <= n;i++){
-        for(char cur_dir : {'L', 'R', 'F'}){
-            if(cur_dir != s[i]){
-                if(cur_dir == 'L'){
-                    state A = pref[i - 1];
-                    A.dir = 'L';
-                    relax(A, suf[i + 1]);
-                }
-                else if(cur_dir == 'R'){
-                    state A = pref[i - 1];
-                    A.dir = 'R';
-                    relax(A, suf[i + 1]);
-                }
-                else{
-                    state A = pref[i - 1];
-                    A.step();
-                    relax(A, suf[i + 1]);
-                }
-            }
+        for(int j = 1;j <= m;j++){
+            if(ar[i][j] == 1) maxeq(ans, up_lef[i][j] + up_rig[i][j] + down_lef[i][j] + down_rig[i][j] - 3);
         }
     }
-    cout << ans.size() << en;
-}            
+
+    cout << ans << en;
+}         
 
 int main(){
     fast_io;

@@ -61,96 +61,51 @@ THE CODE IS ALWAYS SHORT
 
 */
 
-const int N = 3e5 + 500;
-
-int n, suf_last[N];
-string s;
-
-struct state{
-    ll cord;
-    char dir;
-
-    void step(){
-        if(dir == 'R') cord++;
-        if(dir == 'L') cord--;
-    }
-};
-
-state pref[N];
+pll get(pll p){
+    ll d = __gcd(p.f, p.s);
+    p.f /= d;
+    p.s /= d;
+    rt p;
+}
 
 void solve(){
-    cin >> n >> s;
-    s = "#" + s;
+    int n;
+    cin >> n;
+    bool is_vertical = 0, is_horizontal = 0;
+    set<pll> st;
 
-    pref[0] = {0, 'R'};
-    for(int i = 1;i <= n;i++){
-        pref[i] = pref[i - 1];
-        if(s[i] == 'F') pref[i].step();
-        else pref[i].dir = s[i];
-    }
+    for(int i = 0;i < n;i++){
+        ll a, b, c;
+        cin >> a >> b >> c;
+        is_vertical |= (b == 0);
+        is_horizontal |= (a == 0);
 
-    for(int i = n;i >= 1;i--){
-        suf_last[i] = suf_last[i + 1];
-        if(s[i] != 'F') suf_last[i] = i;
-    }
-
-    struct changes{
-        ll add_F;
-        ll add;
-    };
-
-    vector<changes> suf(n + 5);
-    suf[n + 1] = {0, 0};
-    for(int i = n;i >= 1;i--){
-        if(s[i] == 'L'){
-            suf[i].add = suf[i + 1].add - suf[i + 1].add_F;
-            suf[i].add_F = 0;
-        }
-        else if(s[i] == 'R'){
-            suf[i].add = suf[i + 1].add + suf[i + 1].add_F;
-            suf[i].add_F = 0;
-        }
-        else{
-            suf[i].add_F = suf[i + 1].add_F + 1;
-            suf[i].add = suf[i + 1].add;
+        if(b != 0){
+            pll slope = {-a, b};
+            slope = get(slope);
+            st.insert(slope);
         }
     }
-    
-    set<ll> ans;
 
-    auto relax = [&](state A, changes B){
-        ll ret = A.cord;
-        if(A.dir == 'L') ret -= B.add_F;
-        if(A.dir == 'R') ret += B.add_F;
+    int q;
+    cin >> q;
+    while(q--){
+        ll a, b, c;
+        cin >> a >> b >> c;
+        bool ans = 0;
 
-        ret += B.add;
-
-        ans.insert(ret);
-    };
-
-    for(int i = 1;i <= n;i++){
-        for(char cur_dir : {'L', 'R', 'F'}){
-            if(cur_dir != s[i]){
-                if(cur_dir == 'L'){
-                    state A = pref[i - 1];
-                    A.dir = 'L';
-                    relax(A, suf[i + 1]);
-                }
-                else if(cur_dir == 'R'){
-                    state A = pref[i - 1];
-                    A.dir = 'R';
-                    relax(A, suf[i + 1]);
-                }
-                else{
-                    state A = pref[i - 1];
-                    A.step();
-                    relax(A, suf[i + 1]);
-                }
-            }
+        if(a == 0){
+            yesno(is_vertical); cn;
         }
+        if(b == 0){
+            yesno(is_horizontal); cn; 
+        }
+        pll slope = {-a, b};
+        slope = get(slope);
+
+        yesno(st.count(slope));
     }
-    cout << ans.size() << en;
-}            
+}         
 
 int main(){
     fast_io;
